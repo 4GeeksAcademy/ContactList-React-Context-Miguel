@@ -1,18 +1,19 @@
+import { createHashRouter } from "react-router-dom";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [
+			demo: [	
 				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
+					name: "",
+					address: "",
+					email: "",
+					phone: ""
 				}
-			]
+				
+			],
+			contact: []
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -37,7 +38,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
-			}
+			},
+			getData: async () => {
+
+				console.log("Hola desde getData");
+
+				try{
+					
+					const response = await fetch('https://playground.4geeks.com/contact/agendas/Miguel');
+
+					if (!response.ok) {
+						
+						getActions().createAgenda();
+
+					}
+
+					const data = await response.json();
+
+					console.log(data.contacts);
+
+					setStore({contact : data.contacts});
+					
+
+				}
+				catch(error){
+
+					alert("Error al hacer el getData");
+
+				}
+			},
+			createAgenda: async () => {
+
+				try {
+					
+					const response = await fetch('https://playground.4geeks.com/contact/agendas/Miguel',{method: "POST"});
+
+					
+				} catch (error) {
+					
+					alert("Error: en createAgenda");
+				}
+				
+			},
+			
+
 		}
 	};
 };
